@@ -1,9 +1,9 @@
 from flask import Flask, request, redirect, url_for
+from tweets import add_tweet, get_all_tweets, get_tweets_by_username
 
 from myfile import someFunction
 
 app = Flask(__name__)
-tweets = []
 
 current_user = ''
 
@@ -32,6 +32,13 @@ def index():
         return get_html_form('/login', 'Please Login', 'Username', 'username', 'Login')
 
 
+@app.route('/logout')
+def logout():
+    global current_user
+    current_user = ''
+    return redirect(url_for('index'))
+
+
 @app.route('/login', methods=['POST'])
 def login():
     global current_user
@@ -47,19 +54,22 @@ def tweet():
 @app.route('/save-tweet', methods=['POST'])
 def contact():
     tweet = request.form['tweet']
-    tweets.append(tweet)
+    add_tweet(tweet, current_user)
     return 'Successful received tweet ' + tweet
 
 
-@app.route('/my_tweets')
-def my_tweets():
-    tweet = ''
-    for twt in tweets:
-        tweet += f'<li>{twt}</li>'
-
+@app.route('/tweets/<username>')
+@app.route('/tweets')
+def user_tweets(username=None):
+    tweet_html = ''
+    for tweet in get_tweets_by_username(username):
+        tweet_html += f'<li>{tweet["tweet"]} by {tweet["username"]}</li>'
     return f'''
     <h3>All my tweets</h3>
-    <ol>{tweet}</ol>
+    <ol>{tweet_html}</ol>
+    <br>
+    <br>
+    <a href="/logout">Logout {current_user}</a>
     '''
 
 
