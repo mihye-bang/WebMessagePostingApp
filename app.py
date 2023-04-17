@@ -1,8 +1,6 @@
 from flask import Flask, request, redirect, url_for
 from tweets import add_tweet, get_all_tweets, get_tweets_by_username
 
-from myfile import someFunction
-
 app = Flask(__name__)
 
 current_user = ''
@@ -16,12 +14,6 @@ def get_html_form(action, header, field_title, field_name, button_value):
         <input type="submit" value="{button_value}">
         </form> 
         '''
-
-
-if __name__ == "__main__":
-    print(f"First Line: {__name__}")
-
-someFunction()
 
 
 @app.route('/')
