@@ -1,0 +1,13 @@
+{% if username %}
+<h1>All tweets from {{current_user}}</h1>
+{% else %}
+<h1>All tweets</h1>
+{% endif %}
+<ol>
+    {% for tweet in tweets %}
+    <li>{{tweet["tweet"]}} by {{tweet["username"]}}</li>
+    {% endfor %}
+</ol>
+<br>
+<br>
+<a href="/logout">Logout {{current_user}}</a>
