@@ -5,9 +5,6 @@ app = Flask(__name__)
 
 current_user = ''
 
-# def get_html_form(action, header, fieldtitle, fieldname, buttonvalue):
-#     return render_template('form.html', action=action, header=header, fieldtitle=fieldtitle, fieldname=fieldname, buttonvalue=buttonvalue)
-
 
 @app.route('/')
 def index():
