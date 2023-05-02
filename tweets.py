@@ -1,22 +1,13 @@
-tweets = []
+import db
 
 
 def get_all_tweets():
-    return tweets
+    return db.get_all_tweets()
 
 
 def add_tweet(tweet, username):
-    t = {
-        'username': username,
-        'tweet': tweet
-    }
-    tweets.append(t)
+    db.insert_tweet(tweet, username)
 
 
 def get_tweets_by_username(username):
-    user_tweets = []
-    for tweet in tweets:
-        # tweet.get('username')
-        if (tweet['username'] == username):
-            user_tweets.append(tweet)
-    return user_tweets
+    return db.get_tweets_by_username(username)
