@@ -1,10 +1,8 @@
 from db import init
-import db
 from flask import Flask, request, redirect, url_for, render_template
 from tweets import add_tweet, get_all_tweets, get_tweets_by_username
 
 app = Flask(__name__)
-
 current_user = ''
 
 init()
@@ -53,7 +51,11 @@ def user_tweets(username=None):
         tweets = get_tweets_by_username(username)
     else:
         tweets = get_all_tweets()
-    return render_template('tweets.html', tweets=tweets, current_user=current_user, username=username)
+
+    return render_template('tweets.html',
+                           tweets=tweets,
+                           current_user=current_user,
+                           username=username)
 
 
 app.run(host='0.0.0.0', port=81)
