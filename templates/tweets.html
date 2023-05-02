@@ -3,9 +3,12 @@
 {% else %}
 <h1>All tweets</h1>
 {% endif %}
+
 <ol>
     {% for tweet in tweets %}
-    <li>{{tweet["tweet"]}} by {{tweet["username"]}}</li>
+    <li>
+        {{tweet[1]}} by {{tweet[2]}}
+    </li>
     {% endfor %}
 </ol>
 <br>
