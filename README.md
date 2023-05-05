@@ -2,7 +2,7 @@
 
 ## Description
 
-**Web Message Posting Full-Stack Application.** This simple application allows users to log in and upload their messages to display on the tweet list.
+**Web Message Posting Full-Stack Application.** This simple application allows users to log in and upload their messages to display on the tweet list.  
 
 ## Technologies
 
