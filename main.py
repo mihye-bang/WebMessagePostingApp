@@ -1,6 +1,7 @@
 from db import init
 from flask import Flask, request, redirect, url_for, render_template
 from tweets import add_tweet, get_all_tweets, get_tweets_by_username
+from users import get_all_users, password_match, get_user_by_username, create_user
 
 app = Flask(__name__)
 current_user = ''
@@ -13,8 +14,7 @@ def index():
     if current_user:
         return redirect(url_for('tweet'))
     else:
-        return render_template('form.html', action='/login', header='Please Login',
-                               fieldtitle='Username', fieldname='username', buttonvalue='Login')
+        return render_template('login.html')
 
 
 @app.route('/logout')
@@ -24,11 +24,33 @@ def logout():
     return redirect(url_for('index'))
 
 
+@app.route('/register', methods=['GET'])
+def register():
+    return render_template('register.html')
+
+
+@app.route('/register_post', methods=['POST'])
+def register_post():
+    username = request.form['username']
+    password = request.form['password']
+
+    create_user(username, password)
+    user = get_user_by_username(username)
+    print(user)
+    return f'Successfully registered! {username} <br> <a href="/">Login</a>'
+
+
 @app.route('/login', methods=['POST'])
 def login():
     global current_user
-    current_user = request.form['username']
-    return redirect(url_for('tweet'))
+    username = request.form['username']
+    password = request.form['password']
+    authenticated = password_match(username, password)
+    if authenticated:
+        current_user = username
+        return redirect(url_for('tweet'))
+    else:
+        return 'Login failed. Invalid username or password <br> <a href="/">Try again</a>'
 
 
 @app.route('/tweet')

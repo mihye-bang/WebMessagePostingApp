@@ -23,8 +23,21 @@ def init():
         tweet text,
         username text
     )''')
+    # it can also be username text UNIQUE
+    cursor.execute('''CREATE TABLE if not exists users (
+        _id integer primary key autoincrement,
+        username text,
+        password text, 
+        UNIQUE(username)
+    )''')
 
     conn.commit()   # don't forget this - saying I'm done with executing, so it saves the database
+
+
+def create_user(username, password):
+    cursor.execute('INSERT INTO users VALUES (null, :username, :password)', {
+                   'username': username, 'password': password})
+    conn.commit()
 
 
 def insert_tweet(tweet, username):
@@ -39,8 +52,21 @@ def get_all_tweets():
     return tweet
 
 
+def get_all_users():
+    cursor.execute('SELECT * FROM users')
+    users = cursor.fetchall()
+    return users
+
+
 def get_tweets_by_username(username):
     cursor.execute(
         'SELECT * FROM tweets WHERE username = :username', {'username': username})
     tweets = cursor.fetchmany(10)
     return tweets
+
+
+def get_user_by_username(username):
+    cursor.execute(
+        'SELECT * FROM users WHERE username = :username', {'username': username})
+    user = cursor.fetchone()
+    return user
