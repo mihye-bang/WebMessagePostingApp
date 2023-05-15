@@ -11,6 +11,7 @@ Click [HERE](https://venv-chi-liart.vercel.app/) to try the app!
 - Jinja
 - Bootstrap
 - SQLite
+- Vercel
 
 ## Features
 
@@ -20,6 +21,7 @@ Click [HERE](https://venv-chi-liart.vercel.app/) to try the app!
 - Tweets are saved in an SQLite database
 - Users can view all tweets or filter tweets by username
 - Followed MVC architecture to segregate the roles of Model, View, and Controller
+- Deployed on Vercel for public use
 
 ## How to Run
 
