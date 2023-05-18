@@ -1,26 +1,40 @@
 from db import init
-from flask import Flask, request, redirect, url_for, render_template
+from flask import Flask, request, redirect, session, url_for, render_template
 from tweets import add_tweet, get_all_tweets, get_tweets_by_username
 from users import get_all_users, password_match, get_user_by_username, create_user
 
 app = Flask(__name__)
-current_user = ''
+app.secret_key = "this is my secret key"
 
 init()
 
 
 @app.route('/')
 def index():
-    if current_user:
+    # check if the user is logged
+    if 'user' in session:
         return redirect(url_for('tweet'))
     else:
         return render_template('login.html')
 
 
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+    authenticated = password_match(username, password)
+    if authenticated:
+        # Use Flask session
+        session['user'] = username
+        return redirect(url_for('tweet'))
+    else:
+        return "Login Failed. Invalid username or password <br> <a href='/'>Try again</a>"
+
+
 @app.route('/logout')
 def logout():
-    global current_user
-    current_user = ''
+    # Use flask session
+    del session['user']
     return redirect(url_for('index'))
 
 
@@ -40,19 +54,6 @@ def register_post():
     return f'Successfully registered! {username} <br> <a href="/">Login</a>'
 
 
-@app.route('/login', methods=['POST'])
-def login():
-    global current_user
-    username = request.form['username']
-    password = request.form['password']
-    authenticated = password_match(username, password)
-    if authenticated:
-        current_user = username
-        return redirect(url_for('tweet'))
-    else:
-        return 'Login failed. Invalid username or password <br> <a href="/">Try again</a>'
-
-
 @app.route('/tweet')
 def tweet():
     return render_template('form.html', action='/save-tweet', header='What is happening?',
@@ -62,7 +63,8 @@ def tweet():
 @app.route('/save-tweet', methods=['POST'])
 def contact():
     tweet = request.form['tweet']
-    add_tweet(tweet, current_user)
+    # change user info from session
+    add_tweet(tweet, session['user'])
     return 'Successful received tweet ' + tweet
 
 
@@ -76,7 +78,7 @@ def user_tweets(username=None):
 
     return render_template('tweets.html',
                            tweets=tweets,
-                           current_user=current_user,
+                           current_user=session['user'],
                            username=username)
 
 
