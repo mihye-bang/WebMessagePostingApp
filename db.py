@@ -46,14 +46,14 @@ def insert_tweet(tweet, username):
     conn.commit()
 
 
-def get_all_tweets():
-    cursor.execute('SELECT * FROM tweets')
-    tweet = cursor.fetchall()
-    return tweet
+def get_all_tweets(limit):
+    cursor.execute('SELECT * FROM tweets order by _id desc')
+    tweets = cursor.fetchmany(limit)
+    return tweets
 
 
 def get_all_users():
-    cursor.execute('SELECT * FROM users')
+    cursor.execute('SELECT * FROM users order by _id desc')
     users = cursor.fetchall()
     return users
 
@@ -70,3 +70,11 @@ def get_user_by_username(username):
         'SELECT * FROM users WHERE username = :username', {'username': username})
     user = cursor.fetchone()
     return user
+
+
+def get_all_users_following():
+    []
+
+
+def get_all_users_unfollowing():
+    []

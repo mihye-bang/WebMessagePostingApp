@@ -18,3 +18,11 @@ def create_user(username, password):
 
 def get_user_by_username(username):
     return db.get_user_by_username(username)
+
+
+def get_all_users_unfollowing():
+    return db.get_all_users_following()
+
+
+def get_all_users_following():
+    return db.get_all_users_unfollowing()

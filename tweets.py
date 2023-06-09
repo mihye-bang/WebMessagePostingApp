@@ -1,8 +1,8 @@
 import db
 
 
-def get_all_tweets():
-    return db.get_all_tweets()
+def get_all_tweets(limit=100):
+    return db.get_all_tweets(limit)
 
 
 def add_tweet(tweet, username):
