@@ -1,5 +1,7 @@
 # WebMessagePostingApp
 
+Click [HERE](https://web-msgposting-app-xyz.azurewebsites.net/) to try the app!
+
 ## Description
 
 **Web Message Posting Full-Stack Application.** This simple application allows users to log in and upload their messages to display on the tweet list.  
@@ -11,7 +13,7 @@
 - Jinja
 - Bootstrap
 - SQLite
-- Vercel
+- Azure App Services
 
 ## Features
 
