@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% include 'tweet_form.html' %}
+<br>
+{% with tweets=tweets, title='Recent 10 tweets' %}
+{% include 'tweets.html' %}
+{% endwith %}
+{% endblock %}

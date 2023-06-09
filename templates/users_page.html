@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Users{% endblock %}
+
+{% block content %}
+{% with users=all_users, title='All Users' %}
+{% include 'users.html' %}
+{% endwith %}
+<br>
+{% with users=following_users, title='Following' %}
+{% include 'users.html' %}
+{% endwith %}
+<br>
+{% with users=unfollowing_users, title='Not Following' %}
+{% include 'users.html' %}
+{% endwith %}
+{% endblock %}

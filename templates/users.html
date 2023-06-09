@@ -2,13 +2,17 @@
     <div class="card-header">{{title}}</div>
 
     <ul class="list-unstyled m-3">
-        {% for tweet in tweets %}
+        {% for user in users %}
         <li class="media mb-3">
             <img src="https://www.gravatar.com/avatar/94d093eda664addd6e450d7e9881bcad?s=32&d=identicon&r=PG"
                 class="mr-3" alt="user">
             <div class="media-body">
-                <h6 class="mt-0 mb-1">{{tweet[2]}}</h6>
-                <p class="mb-0">{{tweet[1]}}</p>
+                <h6 class="mt-0 mb-1">{{user[1]}}</h6>
+                {% if user[3] %}
+                <a href="#" class="badge badge-success">Follow</a>
+                {% else %}
+                <a href="#" class="badge badge-warning">Unfollow</a>
+                {% endif %}
             </div>
         </li>
         {% endfor %}

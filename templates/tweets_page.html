@@ -1,5 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Users{% endblock %}
+
+{% block content %}
 <div class="card">
-    <div class="card-header">{{title}}</div>
+    <div class="card-header">
+        {% if tweet_user %}
+        All tweets from {{tweet_user}}
+        {% else %}
+        All tweets
+        {% endif %}
+    </div>
 
     <ul class="list-unstyled m-3">
         {% for tweet in tweets %}
@@ -14,3 +24,4 @@
         {% endfor %}
     </ul>
 </div>
+{% endblock %}
