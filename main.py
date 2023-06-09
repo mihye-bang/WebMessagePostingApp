@@ -1,7 +1,9 @@
 from db import init
-from flask import Flask, request, redirect, session, url_for, render_template
+from flask import Flask, request, redirect, session, url_for, render_template, flash
 from tweets import add_tweet, get_all_tweets, get_tweets_by_username
-from users import get_all_users, password_match, get_user_by_username, create_user
+from users import get_all_users, password_match, get_user_by_username, create_user, get_all_users_following, get_all_users_unfollowing
+import random
+
 
 app = Flask(__name__)
 app.secret_key = "this is my secret key"
@@ -13,28 +15,39 @@ init()
 def index():
     # check if the user is logged
     if 'user' in session:
-        return redirect(url_for('tweet'))
+        # Get last 10 tweets
+        tweets = get_all_tweets(10)
+        return render_template('home.html', tweets=tweets)
     else:
         return render_template('login.html')
 
 
 @app.route('/login', methods=['POST'])
 def login():
+    # Getting username and password from the form
     username = request.form['username']
     password = request.form['password']
+
+    if not username or not password:
+        flash('Username or password cannot be blank!', 'error')
+        return render_template('login.html')
+
     authenticated = password_match(username, password)
     if authenticated:
         # Use Flask session
         session['user'] = username
-        return redirect(url_for('tweet'))
+        flash('Login was successful!', 'info')
+        return redirect(url_for('index'))
     else:
-        return "Login Failed. Invalid username or password <br> <a href='/'>Try again</a>"
+        flash('Login Failed. Invalid username or password!', 'error')
+        return render_template('login.html')
 
 
 @app.route('/logout')
 def logout():
     # Use flask session
     del session['user']
+    flash('Logout was successful!', 'info')
     return redirect(url_for('index'))
 
 
@@ -48,10 +61,19 @@ def register_post():
     username = request.form['username']
     password = request.form['password']
 
-    create_user(username, password)
-    user = get_user_by_username(username)
-    print(user)
-    return f'Successfully registered! {username} <br> <a href="/">Login</a>'
+    if not username or password:
+        flash('Username or password cannot be blank!', 'error')
+        return render_template('register.html')
+
+    try:
+        create_user(username, password)
+        user = get_user_by_username(username)
+    except Exception as e:
+        flash(f'Error registering {username}: {e}', 'error')
+    else:
+        flash(f'Successfully registered {username}', 'info')
+        print(user)
+        return redirect(url_for('index'))
 
 
 @app.route('/tweet')
@@ -63,23 +85,44 @@ def tweet():
 @app.route('/save-tweet', methods=['POST'])
 def contact():
     tweet = request.form['tweet']
+    if not tweet:
+        flash('Tweet can not be empty!', 'error')
+        return render_template('form.html', action='/save-tweet', header='What is happening?', fieldtitle='Tweet', fieldname='tweet', buttonvalue='Tweet')
+
     # change user info from session
     add_tweet(tweet, session['user'])
-    return 'Successful received tweet ' + tweet
+    flash('Tweet posted successfully', 'info')
+    return redirect(url_for('index'))
+
+
+@app.route('/users', methods=['GET'])
+def users():
+    following_users = get_all_users_following()
+    unfollowing_users = get_all_users_unfollowing()
+    all_users = get_all_users()
+
+    final_users = []
+    for user in all_users:
+        random_follow = random.choice([True, False])
+        user = (user[0], user[1], user[2], random_follow)
+        final_users.append(user)
+
+    print(final_users)
+    return render_template('users_page.html', all_users=final_users, following_users=following_users, unfollowing_users=unfollowing_users)
 
 
 @app.route('/tweets/<username>')
 @app.route('/tweets')
 def user_tweets(username=None):
+    if 'user' not in session:
+        return redirect(url_for('index'))
+
     if username:
         tweets = get_tweets_by_username(username)
     else:
         tweets = get_all_tweets()
 
-    return render_template('tweets.html',
-                           tweets=tweets,
-                           current_user=session['user'],
-                           username=username)
+    return render_template('tweets_page.html', tweets=tweets, tweet_user=username)
 
 
 app.run(host='0.0.0.0', port=81)
