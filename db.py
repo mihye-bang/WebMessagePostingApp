@@ -30,6 +30,15 @@ def init():
         password text, 
         UNIQUE(username)
     )''')
+    cursor.execute('''
+      CREATE TABLE if not exists followers (
+        follower INTEGER NOT NULL,
+        followee INTEGER NOT NULL,
+        FOREIGN KEY (follower) REFERENCES user(id),
+        FOREIGN KEY (followee) REFERENCES user(id),
+        PRIMARY KEY (follower, followee)
+      );
+    ''')
 
     conn.commit()   # don't forget this - saying I'm done with executing, so it saves the database
 
@@ -72,9 +81,17 @@ def get_user_by_username(username):
     return user
 
 
-def get_all_users_following():
-    []
+def get_all_users_following(userid):
+    cursor.execute(
+        'SELECT * FROM users WHERE _id in (SELECT followee from followers where follower = :a) AND _id <> :a', {
+            'a': userid})
+    followers = cursor.fetchall()
+    return followers
 
 
-def get_all_users_unfollowing():
-    []
+def get_all_users_unfollowing(userid):
+    cursor.execute(
+        'SELECT * FROM users WHERE _id NOT in (SELECT followee from followers where follower = :a) AND _id <> :a', {
+            'a': userid})
+    unfollower = cursor.fetchall()
+    return unfollower

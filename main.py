@@ -10,6 +10,14 @@ app.secret_key = "this is my secret key"
 
 init()
 
+# inject username
+
+
+@app.context_processor
+def inject_user():
+    username = session.get('user', None)
+    return {'username': username}
+
 
 @app.route('/')
 def index():
