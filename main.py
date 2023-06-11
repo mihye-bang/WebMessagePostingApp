@@ -97,15 +97,24 @@ def contact():
 
 @app.route('/users', methods=['GET'])
 def users():
-    following_users = get_all_users_following()
-    unfollowing_users = get_all_users_unfollowing()
+    # following_users = get_all_users_following()
+    # unfollowing_users = get_all_users_unfollowing()
+    following_users = []
+    unfollowing_users = []
     all_users = get_all_users()
 
     final_users = []
     for user in all_users:
+        # add the random bool component to user that implies following/ unfollowing
         random_follow = random.choice([True, False])
         user = (user[0], user[1], user[2], random_follow)
         final_users.append(user)
+
+        # add users based on the bool to following/ unfollowing users
+        if random_follow:
+            unfollowing_users.append(user)
+        else:
+            following_users.append(user)
 
     print(final_users)
     return render_template('users_page.html', all_users=final_users, following_users=following_users, unfollowing_users=unfollowing_users)
