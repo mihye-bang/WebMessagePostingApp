@@ -4,9 +4,8 @@ from tweets import add_tweet, get_all_tweets, get_tweets_by_username
 from users import get_all_users, password_match, get_user_by_username, create_user, get_all_users_following, get_all_users_unfollowing
 import random
 
-
 app = Flask(__name__)
-app.secret_key = "this is my secret key"
+app.secret_key = "super secret key"
 
 init()
 
@@ -142,4 +141,7 @@ def user_tweets(username=None):
     return render_template('tweets_page.html', tweets=tweets, tweet_user=username)
 
 
-app.run(host='0.0.0.0', port=81)
+if __name__ == '__main__':
+    app.debug = True
+    app.run()(host='0.0.0.0', port=81)
+# app.run(host='0.0.0.0', port=81)
