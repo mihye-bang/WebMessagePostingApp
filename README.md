@@ -1,6 +1,6 @@
 # WebMessagePostingApp
 
-Click [HERE](https://web-msgposting-app-xyz.azurewebsites.net/) to try the app!
+Click [HERE](https://web-msgposting-app-xyz.azurewebsites.net/) to try the app! (It takes some time to load the page.)
 
 ## Description
 
